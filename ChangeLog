@@ -1,0 +1,3 @@
+2013-07-08 Nicolas Lamirault <nicolas.lamirault@gmail.com>
+        * Signature: Implements sign API calls
+        * Init: init the Common Lisp cloudstack client.

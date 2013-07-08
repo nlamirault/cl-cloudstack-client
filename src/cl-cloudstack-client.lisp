@@ -63,30 +63,17 @@
   (:documentation "Sign request url using api-key and secret-key of the CLOUDSTACK-CLIENT."))
 
 (defmethod sign-request ((cloudstack-client cloudstack-client) name)
-  (with-slots (uri apikey secretkey) cloudstack-client
-    (let* ((request (format nil "~A?apikey=~A&command=~A&response=json" apikey uri name))
-	   (hmac (ironclad:make-hmac (ironclad:ascii-string-to-byte-array secretkey) :sha1)))
-      (ironclad:update-hmac hmac (ironclad:ascii-string-to-byte-array request))
-;;      (let ((foo (flexi-streams:octets-to-string (ironclad:hmac-digest hmac))))
-      (let ((foo (ironclad:hmac-digest hmac)))
-	(format t "Foo: ~A" foo)
+  (with-slots (apikey secretkey) cloudstack-client
+    (let* ((request (format nil "apikey=~A&command=~A&response=json" apikey name))
+	   (hmac (ironclad:make-hmac (flexi-streams:string-to-octets secretkey :external-format :utf-8)
+				     :sha1)))
+      (ironclad:update-hmac hmac (ironclad:ascii-string-to-byte-array (string-downcase request)))
+      (let ((signature (base64:usb8-array-to-base64-string (ironclad:hmac-digest hmac))))
 	(concatenate 'string
 		     request
 		     "&signature="
-		     foo)))))
+		     (drakma:url-encode signature :utf-8))))))
       
-
-(defun hmac-sha1 (data-string key-string)
-  "Compute an RFC 2104 HMAC-SHA1 digest on data-string using key-string"
-  (let ((hmac (ironclad:make-hmac (ironclad:ascii-string-to-byte-array key-string) :sha1)))
-    (ironclad:update-hmac hmac (ironclad:ascii-string-to-byte-array data-string))
-    (ironclad:hmac-digest hmac)))
-
-
-
-      (concatenate 'string
-		   request "&signature" signature))))
-
 
 (defgeneric api-perform (cloudstack-client url &key parameters method content)
   (:documentation "Make a query to the Cloudstack API using URL."))

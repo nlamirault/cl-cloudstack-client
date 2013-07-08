@@ -14,6 +14,7 @@ Add the projet :
 Run unit tests:
 
 	(ql:quickload "cl-cloudstack-client-test")
+	(setq lisp-unit:*print-failures* t)
 	(lisp-unit:run-tests :all :cl-cloudstack-client-test)
 
 Usage
