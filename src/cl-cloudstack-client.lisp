@@ -59,19 +59,22 @@
 	  (json:decode-json-from-string body)
 	  (error 'cloudstack-request-error :code status-code :message body)))))
 
-
 (defgeneric sign-request (cloudstack-client name)
   (:documentation "Sign request url using api-key and secret-key of the CLOUDSTACK-CLIENT."))
 
 (defmethod sign-request ((cloudstack-client cloudstack-client) name)
   (with-slots (uri apikey secretkey) cloudstack-client
     (let* ((request (format nil "~A?apikey=~A&command=~A&response=json" apikey uri name))
-	   (hmac (ironclad:make-hmac secretkey :sha1))
-	   (ironclad:update-hmac hmac (ironclad:ascii-string-to-byte-array request))
-	   (ironclad:hmac-digest hmac)
-
-	   (signature (ironclad:byte-array-to-hex-string
-		       (ironclad:make-hmac secretkey :sha1)
+	   (hmac (ironclad:make-hmac (ironclad:ascii-string-to-byte-array secretkey) :sha1)))
+      (ironclad:update-hmac hmac (ironclad:ascii-string-to-byte-array request))
+;;      (let ((foo (flexi-streams:octets-to-string (ironclad:hmac-digest hmac))))
+      (let ((foo (ironclad:hmac-digest hmac)))
+	(format t "Foo: ~A" foo)
+	(concatenate 'string
+		     request
+		     "&signature="
+		     foo)))))
+      
 
 (defun hmac-sha1 (data-string key-string)
   "Compute an RFC 2104 HMAC-SHA1 digest on data-string using key-string"

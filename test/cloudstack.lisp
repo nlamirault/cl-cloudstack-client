@@ -17,7 +17,7 @@
 
 (define-test can-sign-request
   (let ((cloudstack 
-	 (make-cloudstack-client "command=listDomains" *user-api-key* *user-secret-key*)))
+	 (make-cloudstack-client "http://localhost:9090" *user-api-key* *user-secret-key*)))
     (assert-equal *ordered-url* (sign-request cloudstack "listDomains"))))
 		
 
