@@ -3,7 +3,8 @@
 (defpackage #:cl-cloudstack-client-test
   (:use #:cl 
 	#:cl-cloudstack-client
-	#:lisp-unit))
+	#:lisp-unit)
+  (:export *cloudstack-test-uri*))
 
 
 

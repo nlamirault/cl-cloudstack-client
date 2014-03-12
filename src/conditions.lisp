@@ -1,4 +1,15 @@
-;;;; cl-cloudstack-client.lisp
+;;;; -*- Mode: LISP; Syntax: ANSI-Common-Lisp; Base: 10 -*-
+
+;;;; *************************************************************************
+;;;; FILE IDENTIFICATION
+;;;;
+;;;; Name:          conditions.lisp
+;;;; Purpose:       cl-cloudstack-client errors
+;;;; Programmer:    Nicolas Lamirault <nicolas.lamirault@gmail.com>
+;;;;
+;;;; *************************************************************************
+
+
 
 (in-package #:cl-cloudstack-client)
 
