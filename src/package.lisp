@@ -14,12 +14,9 @@
   (:use #:cl)
   (:export cloudstack-client
 	   make-cloudstack-client
-	   sign-request
 
 	   cloudstack-error
 	   cloudstack-request-error
 
-	   ;; API
-	   list-service-offerings
+	   cloudstack-call
 	   ))
-

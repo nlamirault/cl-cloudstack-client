@@ -3,7 +3,7 @@
 ;;;; *************************************************************************
 ;;;; FILE IDENTIFICATION
 ;;;;
-;;;; Name:          conditions.lisp
+;;;; Name:          cl-cloudstack-client.lisp
 ;;;; Purpose:       Cloudstack client
 ;;;; Programmer:    Nicolas Lamirault <nicolas.lamirault@gmail.com>
 ;;;;
@@ -33,16 +33,6 @@
   "Creates a new Cloudstack client."
   (make-instance 'cloudstack-client
 		 :uri uri :api-key apikey :secret-key secretkey))
-
-;;
-;; API
-;;
-
-;; (defgeneric list-service-offerings (cloudstack-client &optional parameters)
-;;   (:documentation "Lists all available service offerings."))
-
-;; (defgeneric list-disk-offerings (cloudstack-client &optional parameters)
-;;   (:documentation "Lists all available disk offerings."))
 
 ;;
 ;; Tools
@@ -100,52 +90,57 @@
 		       "&signature="
 		       (drakma:url-encode signature :utf-8)))))))
 
-(defgeneric api-perform (cloudstack-client url &key parameters method content)
+(defgeneric cloudstack-call (cloudstack-client name &key parameters) ;; method content)
   (:documentation "Make a query to the Cloudstack API using URL."))
 
-(defmethod api-perform ((cloudstack-client cloudstack-client) name
-			&key parameters (method :get) content)
+(defmethod cloudstack-call ((cloudstack-client cloudstack-client) name
+			    &key parameters) ;; (method :get) content)
     (let ((url (sign-request cloudstack-client name parameters)))
       (http-request (format nil "~A?~A" (cloudstack-client-uri cloudstack-client) url))))
 
 
-;;
-;; Tools
-;;
 
-
-(defmacro define-cloudstack-command (name cloudstack-client command description parameters
-				       &body body)
-  `(progn
-     (defgeneric ,name (cloudstack-client &optional parameters)
-       (:documentation ,description))
-     (defmethod ,name ((cloudstack-client cloudstack-client) &optional parameters)
-       (api-perform cloudstack-client ,command :parameters ,parameters))))
+;; (defmacro define-cloudstack-command (name description command cloudstack-client
+;; 				     parameters &body body)
+;;   `(progn
+;;      (defgeneric ,name (cloudstack-client &optional parameters)
+;;        (:documentation ,description))
+;;      (defmethod ,name ((cloudstack-client cloudstack-client) &optional parameters)
+;;        (cloudstack-call cloudstack-client ,command :parameters ,parameters))))
 
 
 ;;
 ;; Virtual machines
 ;;
 
-(define-cloudstack-command list-virtual-machines
-    cloudstack-client "listVirtualMachines" "List virtual machines" parameters)
+;; (define-cloudstack-command deploy-virtual-machine
+;;     "Creates and automatically starts a virtual machine based on a service offering,
+;; disk offering, and template."
+;;     "deployVirtualMachine" cloudstack-client parameters)
 
-(define-cloudstack-command start-virtual-machine
-    cloudstack-client "startVirtualMachine" "Starts a virtual machine." parameters)
+;; (define-cloudstack-command list-virtual-machines
+;;     "List virtual machines"
+;;     "listVirtualMachines" cloudstack-client parameters)
 
-(define-cloudstack-command stop-virtual-machine
-    cloudstack-client "stopVirtualMachine" "Stops a virtual machine." parameters)
+;; (define-cloudstack-command start-virtual-machine
+;;     "Starts a virtual machine."
+;;     "startVirtualMachine" cloudstack-client parameters)
 
-(define-cloudstack-command reboot-virtual-machine
-    cloudstack-client "rebootVirtualMachine" "Reboots a virtual machine." parameters)
+;; (define-cloudstack-command stop-virtual-machine
+;;     "Stops a virtual machine."
+;;     "stopVirtualMachine" cloudstack-client parameters)
+
+;; (define-cloudstack-command reboot-virtual-machine
+;;     "Reboots a virtual machine."
+;;     "rebootVirtualMachine" cloudstack-client parameters)
 
 
 ;;
 ;; Domains
 ;;
 
-(define-cloudstack-command list-domains
-    cloudstack-client "listDomains" "List domains" parameters)
+;; (define-cloudstack-command list-domains
+;;     cloudstack-client "listDomains" "List domains" parameters)
 
 
 ;;
@@ -153,28 +148,28 @@
 ;;
 
 
-(define-cloudstack-command list-service-offerings
-    cloudstack-client "listServiceOfferings" "Lists all available service offerings." parameters)
+;; (define-cloudstack-command list-service-offerings
+;;     cloudstack-client "listServiceOfferings" "Lists all available service offerings." parameters)
 
 ;;
 ;; Disk Offering
 ;;
 
 
-(define-cloudstack-command list-disk-offerings
-    cloudstack-client "listDiskOfferings" "Lists all available disk offerings." parameters)
+;; (define-cloudstack-command list-disk-offerings
+;;     cloudstack-client "listDiskOfferings" "Lists all available disk offerings." parameters)
 
 ;;
 ;; Host
 ;;
 
-(define-cloudstack-command list-hosts
-    cloudstack-client "listHosts" "Lists hosts." parameters)
+;; (define-cloudstack-command list-hosts
+;;     cloudstack-client "listHosts" "Lists hosts." parameters)
 
 
 ;;
 ;; Hypervisor
 ;;
 
-(define-cloudstack-command list-hypervisors
-    cloudstack-client "listHypervisors" "Lists hypervisors." parameters)
+;; (define-cloudstack-command list-hypervisors
+;;     cloudstack-client "listHypervisors" "Lists hypervisors." parameters)
