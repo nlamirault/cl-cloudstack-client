@@ -1,8 +1,6 @@
 # cl-cloudstack-client
 
-[![Build Status](https://drone.io/github.com/nlamirault/divona/status.png)](https://drone.io/github.com/nlamirault/divona/latest)
-
-)
+[![Build Status](https://drone.io/github.com/nlamirault/cl-cloudstack-client/status.png)](https://drone.io/github.com/nlamirault/cl-cloudstack-client/latest)
 
 A client for Cloudstack API writtent in Common Lisp.
 
