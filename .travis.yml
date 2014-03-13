@@ -1,4 +1,0 @@
-script: ./ci/cl-cloudstack-client-ci.sh
-before_install:
-    - sudo apt-get update
-    - sudo apt-get install sbcl
